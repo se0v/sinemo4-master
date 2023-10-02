@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
             registerReceiver(appLaunchReceiver, filterIntent)
 
             val startRecBroadcastReceiver: StartRecBroadcastReceiver?
-            //register a receiver to telll the MainActivity when a notification has been received
+            //register a receiver to tell the MainActivity when a notification has been received
             startRecBroadcastReceiver = StartRecBroadcastReceiver()
             val intentFilter = IntentFilter()
             intentFilter.addAction("com.example.sinemo")
