@@ -2,41 +2,26 @@ package com.example.sinemo
 
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.AccessibilityServiceInfo
+import android.annotation.SuppressLint
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 
 class MyAccessibilityService : AccessibilityService() {
     private val TAG = "RecorderService"
 
-    private fun getEventType(event: AccessibilityEvent): String? {
-        when (event.eventType) {
-            AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED -> return "TYPE_NOTIFICATION_STATE_CHANGED"
-            AccessibilityEvent.TYPE_VIEW_CLICKED -> return "TYPE_VIEW_CLICKED"
-            AccessibilityEvent.TYPE_VIEW_FOCUSED -> return "TYPE_VIEW_FOCUSED"
-            AccessibilityEvent.TYPE_VIEW_LONG_CLICKED -> return "TYPE_VIEW_LONG_CLICKED"
-            AccessibilityEvent.TYPE_VIEW_SELECTED -> return "TYPE_VIEW_SELECTED"
-            AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> return "TYPE_WINDOW_STATE_CHANGED"
-            AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED -> return "TYPE_VIEW_TEXT_CHANGED"
-        }
-        return "default"
-    }
+    @SuppressLint("NewApi")
+    override fun onAccessibilityEvent(event: AccessibilityEvent?) {
+        if (event?.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+            val packageName = event.packageName?.toString()
+            if (packageName == "org.telegram.messenger") {
+                Log.d(TAG, "entry")
+                if (isRecording) stopRecording() else startRecording()
 
-    private fun getEventText(event: AccessibilityEvent): String? {
-        val sb = StringBuilder()
-        for (s in event.text) {
-            sb.append(s)
+            } else {
+                Log.d(TAG, "exit")
+                stopRecording()
+            }
         }
-        return sb.toString()
-    }
-
-    override fun onAccessibilityEvent(event: AccessibilityEvent) {
-        Log.v(
-            TAG, String.format(
-                "onAccessibilityEvent: [type] %s [class] %s [package] %s [time] %s [text] %s",
-                getEventType(event), event.className, event.packageName,
-                event.eventTime, getEventText(event)
-            )
-        )
     }
 
     override fun onInterrupt() {

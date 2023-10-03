@@ -36,7 +36,7 @@ fun MainScreen() {
         horizontalAlignment = Alignment.CenterHorizontally
     )
     {
-        Button(onClick = { stopRecording(audioViewModel)
+        Button(onClick = { stopRecording()
             try {
                 val file = File(output)
                 if(file.exists()) {

@@ -14,15 +14,15 @@ import java.io.IOException
 import java.util.*
 import kotlin.math.log10
 var output: String = ""
-private var mediaRecorder: MediaRecorder? = null
+var mediaRecorder: MediaRecorder? = null
 private var state: Boolean = false
 private var maxAmplitude = 0
-private var lastMaxAmplitude = 0
-private var lastMaxAmplitudeTime = 0L
+var lastMaxAmplitude = 0
+var lastMaxAmplitudeTime = 0L
 var numRec = 0
 var isRecording = false
 val audioViewModel = AudioViewModel()
-private val handler = Handler(Looper.getMainLooper())
+val handler = Handler(Looper.getMainLooper())
 private val amplitudeRunnable = object : Runnable {
     override fun run() {
         if (mediaRecorder != null) {
@@ -32,7 +32,7 @@ private val amplitudeRunnable = object : Runnable {
             Log.d("AMPLITUDE", "Max amplitude: $db dB")
             val currentTime = System.currentTimeMillis()
             if (dbLast - db > 20 || currentTime - lastMaxAmplitudeTime >= 10000) {
-                stopRecording(audioViewModel)
+                stopRecording()
             } else {
                 lastMaxAmplitude = maxAmplitude
                 handler.postDelayed(this, 3000L)
@@ -71,7 +71,7 @@ fun startRecording() {
     }
 }
 @SuppressLint("MissingPermission")
-fun stopRecording(audioViewModel: AudioViewModel) {
+fun stopRecording() {
     isRecording = false
     if (state) {
         try {
