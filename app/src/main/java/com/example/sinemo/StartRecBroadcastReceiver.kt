@@ -17,7 +17,8 @@ open class StartRecBroadcastReceiver: BroadcastReceiver() {
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun startInterceptedNotificationRec(notificationCode: Int) {
         when (notificationCode) {
-            NotificationListener.InterceptedNotificationCode.TELEGRAM_CODE -> if (isRecording) stopRecording() else startRecording()
+            NotificationListener.InterceptedNotificationCode.TELEGRAM_CODE -> if (isRecording) stopRecording(
+                audioViewModel) else startRecording()
             NotificationListener.InterceptedNotificationCode.OTHER_APPS_CODE -> startRec = false
         }
         Log.d("CHECK", startRec.toString())

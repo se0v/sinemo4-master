@@ -10,16 +10,21 @@ class MyAccessibilityService : AccessibilityService() {
     private val TAG = "RecorderService"
 
     @SuppressLint("NewApi")
-    override fun onAccessibilityEvent(event: AccessibilityEvent?) {
-        if (event?.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+    override fun onAccessibilityEvent(event: AccessibilityEvent) {
+        if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
             val packageName = event.packageName?.toString()
             if (packageName == "org.telegram.messenger") {
-                Log.d(TAG, "entry")
-                if (isRecording) stopRecording() else startRecording()
-
+                if (!isRecording) {
+                    Log.d("Window", "entry")
+                    startRecording()
+                    isRecording = true
+                }
             } else {
-                Log.d(TAG, "exit")
-                stopRecording()
+                if (isRecording) {
+                    Log.d("Window", "exit")
+                    stopRecording(audioViewModel)
+                    isRecording = false
+                }
             }
         }
     }
@@ -37,6 +42,4 @@ class MyAccessibilityService : AccessibilityService() {
         info.feedbackType = AccessibilityServiceInfo.FEEDBACK_GENERIC
         serviceInfo = info
     }
-
-
 }

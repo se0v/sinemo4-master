@@ -32,7 +32,7 @@ private val amplitudeRunnable = object : Runnable {
             Log.d("AMPLITUDE", "Max amplitude: $db dB")
             val currentTime = System.currentTimeMillis()
             if (dbLast - db > 20 || currentTime - lastMaxAmplitudeTime >= 10000) {
-                stopRecording()
+                stopRecording(audioViewModel)
             } else {
                 lastMaxAmplitude = maxAmplitude
                 handler.postDelayed(this, 3000L)
@@ -71,7 +71,7 @@ fun startRecording() {
     }
 }
 @SuppressLint("MissingPermission")
-fun stopRecording() {
+fun stopRecording(audioViewModel: AudioViewModel) {
     isRecording = false
     if (state) {
         try {

@@ -30,12 +30,12 @@ class MainActivity : ComponentActivity() {
                 ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), REQUEST_RECORD_AUDIO_PERMISSION)
             }
 
-            val startRecBroadcastReceiver: StartRecBroadcastReceiver?
+            /*val startRecBroadcastReceiver: StartRecBroadcastReceiver?
             //register a receiver to tell the MainActivity when a notification has been received
             startRecBroadcastReceiver = StartRecBroadcastReceiver()
             val intentFilter = IntentFilter()
             intentFilter.addAction("com.example.sinemo")
-            registerReceiver(startRecBroadcastReceiver, intentFilter)
+            registerReceiver(startRecBroadcastReceiver, intentFilter)*/
 
             val navController = rememberNavController()
             val screens = AppScreen.getAll()
