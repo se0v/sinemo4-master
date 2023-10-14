@@ -1,29 +1,30 @@
 package com.example.sinemo.screens
 
 import android.content.Intent
+import android.os.Build
+import android.provider.Settings
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.core.content.FileProvider
-import com.example.sinemo.*
-import java.io.File
-import java.lang.Exception
 
+@RequiresApi(Build.VERSION_CODES.R)
 @Composable
 fun MainScreen() {
     val context = LocalContext.current
@@ -31,59 +32,60 @@ fun MainScreen() {
         modifier = Modifier
             .background((Color.DarkGray))
             .fillMaxWidth()
-            .fillMaxHeight(),
+            .fillMaxHeight()
+            .padding(57.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     )
     {
-        Button(onClick = { stopRecording(audioViewModel)
-            try {
-                val file = File(output)
-                if(file.exists()) {
-                    val uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file)
-                    val intent = Intent(Intent.ACTION_SEND)
-                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                    intent.type = "audio/ogg"
-                    intent.putExtra(Intent.EXTRA_STREAM, uri)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    intent.setPackage("org.telegram.messenger")
-                    context.startActivity(intent)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        },
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = Color.Black
-            ),
-            modifier = Modifier
-                .size(250.dp)
-                .clip(CircleShape)){
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+        Image(imageVector = Icons.Default.Warning,
+            contentDescription = null,
+            Modifier.size(150.dp)
+        )
+        Text(text = "For use this app, you must provide the following accesses:",
+            style = TextStyle(color = Color.White)
+        )
+        Button(
+            onClick = {
+                val intentAccess = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                context.startActivity(intentAccess)
+            },
+            colors = ButtonDefaults
+                .buttonColors(backgroundColor = Color.Black),
+            modifier = Modifier.width(300.dp)) {
+            Text(text = "Access to Accessibility Settings ")
+            Icon(
+                imageVector = Icons.Default.Settings,
+                contentDescription = null
             )
-            {
-                Text(text = "Share",
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(start = 55.dp)
-                        .rotate(25f),
-                    fontSize = 25.sp)
-                Icon(
-                    imageVector = Icons.Default.Send,
-                    contentDescription = null,
-                    modifier = Modifier.size(148.dp)
-                )
-                Text(text = "emotion",
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .rotate(-25f)
-                        .padding(start = 55.dp),
-                    fontSize = 25.sp)
-            }
+        }
+        Button(
+            onClick = {
+                val intentNotify = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
+                context.startActivity(intentNotify)
+            },
+            colors = ButtonDefaults
+                .buttonColors(backgroundColor = Color.Black),
+            modifier = Modifier.width(300.dp)) {
+            Text(text = "Access to Notifications ")
+            Icon(
+                imageVector = Icons.Default.Notifications,
+                contentDescription = null
+            )
+        }
+        Button(
+            onClick = {
+                val intentFiles = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
+                context.startActivity(intentFiles)
+            },
+            colors = ButtonDefaults
+                .buttonColors(backgroundColor = Color.Black),
+            modifier = Modifier.width(300.dp)) {
+            Text(text = "Access to All Files ")
+            Icon(
+                imageVector = Icons.Default.List,
+                contentDescription = null
+            )
         }
     }
-
 }

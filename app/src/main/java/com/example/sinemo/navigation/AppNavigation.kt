@@ -8,7 +8,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.sinemo.screens.LazyListScreen
 import com.example.sinemo.screens.MainScreen
-import com.example.sinemo.screens.PermissionScreen
 
 @RequiresApi(Build.VERSION_CODES.R)
 @Composable
@@ -29,11 +28,6 @@ fun AppNavigation(
             route = AppScreen.MainScreen.route
         ){
             MainScreen()
-        }
-        composable(
-            route = AppScreen.PermissionScreen.route
-        ){
-            PermissionScreen()
         }
     }
 

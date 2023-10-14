@@ -15,13 +15,13 @@ class MyAccessibilityService : AccessibilityService() {
             val packageName = event.packageName?.toString()
             if (packageName == "org.telegram.messenger") {
                 if (!isRecording) {
-                    Log.d("Window", "entry")
+                    Log.d("Window is", "open")
                     startRecording()
                     isRecording = true
                 }
             } else {
                 if (isRecording) {
-                    Log.d("Window", "exit")
+                    Log.d("Window is", "closed")
                     stopRecording(audioViewModel)
                     isRecording = false
                 }
