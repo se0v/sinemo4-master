@@ -2,10 +2,12 @@ package com.example.sinemo.screens
 
 import android.content.Intent
 import android.media.MediaPlayer
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -25,9 +27,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import com.example.sinemo.BuildConfig
+import com.example.sinemo.R
 import com.example.sinemo.audioViewModel
 import com.example.sinemo.output
 import com.example.sinemo.stopRecording
@@ -49,7 +53,9 @@ fun LazyListScreen(
     ) {
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize().background(color = Color.DarkGray)
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = Color.DarkGray)
     ) {
         items(
             items = dataSet
@@ -94,6 +100,8 @@ fun LazyListScreen(
                         contentDescription = null
                     )
                 }
+                Image(painter = painterResource(id = R.drawable.instagram_logo), contentDescription = null,
+                    Modifier.size(40.dp).padding(top = 7.5.dp, end = 10.dp))
             }
         }
     }

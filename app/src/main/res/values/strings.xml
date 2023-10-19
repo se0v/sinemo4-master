@@ -1,6 +1,5 @@
 <resources>
-    <string name="app_name">sinEmo</string>
+    <string name="app_name">SinEmo</string>
     <string name="screen_lazy_list">History</string>
     <string name="screen_main">Home</string>
-    <string name="screen_perm">Permissions</string>
 </resources>

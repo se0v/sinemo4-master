@@ -7,6 +7,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
@@ -24,7 +25,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.sinemo.R
+import androidx.compose.ui.res.painterResource as painterResource
 
 @RequiresApi(Build.VERSION_CODES.R)
 @Composable
@@ -46,7 +51,7 @@ fun MainScreen() {
             .background((Color.DarkGray))
             .fillMaxWidth()
             .fillMaxHeight()
-            .padding(57.dp),
+            .padding(start = 57.dp, end = 57.dp, top = 25.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     )
@@ -56,7 +61,8 @@ fun MainScreen() {
             Modifier.size(150.dp)
         )
         Text(text = "For use this app, you must provide the following accesses to:",
-            style = TextStyle(color = Color.White)
+            style = TextStyle(color = Color.White, fontSize = 16.sp),
+            textAlign = TextAlign.Center
         )
         Button(
             onClick = {
@@ -65,7 +71,7 @@ fun MainScreen() {
             },
             colors = ButtonDefaults
                 .buttonColors(backgroundColor = Color.Black),
-            modifier = Modifier.fillMaxWidth()) {
+            modifier = Modifier.fillMaxWidth().padding(top = 15.dp)) {
             Text(text = "Accessibility ")
             Icon(
                 imageVector = Icons.Default.Star,
@@ -94,12 +100,16 @@ fun MainScreen() {
             },
             colors = ButtonDefaults
                 .buttonColors(backgroundColor = Color.Black),
-            modifier = Modifier.fillMaxWidth()) {
+            modifier = Modifier.fillMaxWidth().padding(bottom = 15.dp)) {
             Text(text = "All Files ")
             Icon(
                 imageVector = Icons.Default.List,
                 contentDescription = null
             )
         }
+        Text(text = "For now only works with Instagram",
+            textAlign = TextAlign.Center, fontSize = 16.sp)
+        Image(painter = painterResource(id = R.drawable.instagram_logo), contentDescription = null,
+            Modifier.padding(15.dp).size(150.dp))
     }
 }}
