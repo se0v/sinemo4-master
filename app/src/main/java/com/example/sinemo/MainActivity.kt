@@ -44,13 +44,6 @@ class MainActivity : ComponentActivity() {
 
             SinemoTheme {
                 Scaffold(
-                    topBar = {
-                        TopAppBar(
-                            title = {
-                                Text("SinEmo")
-                            }
-                        )
-                    },
                     content = {
                         AppNavigation(navController)
                     },

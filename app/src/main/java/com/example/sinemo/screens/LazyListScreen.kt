@@ -12,7 +12,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.PlayArrow
@@ -34,8 +36,17 @@ import java.io.File
 @Composable
 fun LazyListScreen(
 ) {
+
     val context = LocalContext.current
-    val dataSet = audioViewModel.recordList
+    val dataSet = audioViewModel.recordList.drop(1)
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "My Records") }
+            )
+        }
+    ) {
 
     LazyColumn(
         modifier = Modifier.fillMaxSize().background(color = Color.DarkGray)
@@ -86,7 +97,7 @@ fun LazyListScreen(
             }
         }
     }
-}
+}}
 
 @Composable
 fun AudioPlayer(
