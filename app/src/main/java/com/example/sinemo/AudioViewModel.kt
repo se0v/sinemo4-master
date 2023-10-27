@@ -19,7 +19,6 @@ class AudioViewModel : ViewModel() {
     audioPath = output
     )
     )
-    private set
     fun addRecord(record: DataRecord) {
         recordList.add(record)
     }

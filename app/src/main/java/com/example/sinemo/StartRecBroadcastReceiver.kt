@@ -6,7 +6,7 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 
-open class StartRecBroadcastReceiver: BroadcastReceiver() {
+open class StartRecBroadcastReceiver : BroadcastReceiver() {
     private var startRec = false
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onReceive(p0: Context?, p1: Intent?) {
@@ -17,8 +17,13 @@ open class StartRecBroadcastReceiver: BroadcastReceiver() {
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun startInterceptedNotificationRec(notificationCode: Int) {
         when (notificationCode) {
-            NotificationListener.InterceptedNotificationCode.TELEGRAM_CODE -> if (isRecording) stopRecording(
-                audioViewModel) else startRecording()
+            NotificationListener.InterceptedNotificationCode.TELEGRAM_CODE -> if (isRecording) {
+                val myAccessibilityService = MyAccessibilityService()
+                myAccessibilityService.stopRecording(audioViewModel)
+            } else {
+                val myAccessibilityService = MyAccessibilityService()
+                myAccessibilityService.startRecording()
+            }
             NotificationListener.InterceptedNotificationCode.OTHER_APPS_CODE -> startRec = false
         }
         Log.d("CHECK", startRec.toString())

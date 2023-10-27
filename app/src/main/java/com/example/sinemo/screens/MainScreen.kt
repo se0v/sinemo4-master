@@ -48,7 +48,7 @@ fun MainScreen() {
     {
     Column(
         modifier = Modifier
-            .background((Color.DarkGray))
+            .background((Color(0xFF1F2022)))
             .fillMaxWidth()
             .fillMaxHeight()
             .padding(start = 57.dp, end = 57.dp, top = 25.dp),
@@ -71,7 +71,9 @@ fun MainScreen() {
             },
             colors = ButtonDefaults
                 .buttonColors(backgroundColor = Color.Black),
-            modifier = Modifier.fillMaxWidth().padding(top = 15.dp)) {
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 15.dp)) {
             Text(text = "Accessibility ")
             Icon(
                 imageVector = Icons.Default.Star,
@@ -100,16 +102,31 @@ fun MainScreen() {
             },
             colors = ButtonDefaults
                 .buttonColors(backgroundColor = Color.Black),
-            modifier = Modifier.fillMaxWidth().padding(bottom = 15.dp)) {
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 15.dp)) {
             Text(text = "All Files ")
             Icon(
                 imageVector = Icons.Default.List,
                 contentDescription = null
             )
         }
-        Text(text = "For now only works with Instagram",
+        Text(text = "For now only works with:",
             textAlign = TextAlign.Center, fontSize = 16.sp)
-        Image(painter = painterResource(id = R.drawable.instagram_logo), contentDescription = null,
-            Modifier.padding(15.dp).size(150.dp))
-    }
+        Row(
+            modifier = Modifier.padding(50.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.telega_logo),
+                contentDescription = null,
+                modifier = Modifier.size(50.dp)
+            )
+            Spacer(modifier = Modifier.width(32.dp))
+            Image(
+                painter = painterResource(id = R.drawable.instagram_logo),
+                contentDescription = null,
+                modifier = Modifier.size(50.dp)
+            )
+        }}
 }}
