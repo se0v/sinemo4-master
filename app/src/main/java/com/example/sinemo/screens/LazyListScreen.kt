@@ -7,11 +7,20 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -38,10 +47,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import com.example.sinemo.BuildConfig
+import com.example.sinemo.DataRecord
 import com.example.sinemo.MyAccessibilityService
 import com.example.sinemo.R
 import com.example.sinemo.audioViewModel
-import com.example.sinemo.output
 import java.io.File
 
 @Composable
@@ -49,7 +58,10 @@ fun LazyListScreen(
 ) {
 
     val context = LocalContext.current
-    val dataSet = audioViewModel.recordList.drop(1)
+    val dataSet = audioViewModel.recordList
+
+    var showDialog by remember { mutableStateOf(false) }
+    var recordToDelete by remember { mutableStateOf<DataRecord?>(null) }
 
     Scaffold(
         topBar = {
@@ -75,15 +87,23 @@ fun LazyListScreen(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(color = Color(0xFF1F2022))
+                    .background(color = Color(0xFF1F2022)),
+                state = rememberLazyListState()
             ) {
                 items(
                     items = dataSet
                 ) { record ->
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Box(
+                        modifier = Modifier
+                            .padding(horizontal = 4.dp)
+                            .background(color = Color(0xFF282828), shape = RoundedCornerShape(corner = CornerSize(12.dp)))
+                            .padding(vertical = 4.dp)
+                    ){
                     Row {
                         AudioPlayer(
                             audioPath = record.audioPath,
-                            modifier = Modifier.size(48.dp),
+                            modifier = Modifier.size(48.dp)
                         )
 
                         Column(
@@ -102,7 +122,7 @@ fun LazyListScreen(
                             val myAccessibilityService = MyAccessibilityService()
                             myAccessibilityService.stopRecording(audioViewModel)
                             try {
-                                val file = File(output)
+                                val file = File(record.audioPath)
                                 if (file.exists()) {
                                     val uri = FileProvider.getUriForFile(
                                         context,
@@ -132,12 +152,56 @@ fun LazyListScreen(
                             Modifier
                                 .padding(top = 10.dp, end = 10.dp).size(30.dp)
                         )
-                        IconButton(onClick = {  }) {
+                        IconButton(onClick = {
+                            showDialog = true
+                            recordToDelete = record
+                        }) {
                             Icon(
-                                imageVector =  Icons.Default.Delete,
+                                imageVector = Icons.Default.Delete,
                                 contentDescription = null,
                                 Modifier
                                     .padding(top = 6.dp, end = 5.dp)
+                            )
+                        }
+                    }
+                        if (showDialog) {
+                            AlertDialog(
+                                onDismissRequest = {
+                                    // Close dialog if cancel
+                                    showDialog = false
+                                    recordToDelete = null
+                                },
+                                title = { Text("Delete Record") },
+                                text = { Text("Are you sure you want to delete this record?") },
+                                shape = RoundedCornerShape(corner = CornerSize(24.dp)),
+                                backgroundColor = Color(0xFF1F2022),
+                                confirmButton = {
+                                    Button(
+                                        onClick = {
+                                            // Confirm delete
+                                            audioViewModel.deleteRecord(recordToDelete!!)
+                                            showDialog = false
+                                            recordToDelete = null
+                                        },
+                                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF1F2022)),
+                                        shape = CircleShape
+                                    ) {
+                                        Text("Yes")
+                                    }
+                                },
+                                dismissButton = {
+                                    Button(
+                                        onClick = {
+                                            // Cancel delete
+                                            showDialog = false
+                                            recordToDelete = null
+                                        },
+                                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF1F2022)),
+                                        shape = CircleShape
+                                    ) {
+                                        Text("No")
+                                    }
+                                }
                             )
                         }
                     }
@@ -189,7 +253,4 @@ fun AudioPlayer(
             contentDescription = null
         )
     }
-}
-fun deleteAudio(audioPath: String) {
-    File(audioPath).delete()
 }

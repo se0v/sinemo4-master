@@ -8,6 +8,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
@@ -52,13 +54,13 @@ fun MainScreen() {
             .fillMaxWidth()
             .fillMaxHeight()
             .padding(start = 57.dp, end = 57.dp, top = 25.dp),
-        verticalArrangement = Arrangement.Top,
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     )
     {
-        Image(imageVector = Icons.Default.Warning,
+        Icon(imageVector = Icons.Default.Warning,
             contentDescription = null,
-            Modifier.size(150.dp)
+            modifier = Modifier.size(90.dp).padding(10.dp)
         )
         Text(text = "For use this app, you must provide the following accesses to:",
             style = TextStyle(color = Color.White, fontSize = 16.sp),
@@ -69,8 +71,9 @@ fun MainScreen() {
                 val intentAccess = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
                 context.startActivity(intentAccess)
             },
+            shape = RoundedCornerShape(corner = CornerSize(12.dp)),
             colors = ButtonDefaults
-                .buttonColors(backgroundColor = Color.Black),
+                .buttonColors(backgroundColor = Color(0xFF282828)),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 15.dp)) {
@@ -86,8 +89,9 @@ fun MainScreen() {
                 val intentNotify = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
                 context.startActivity(intentNotify)
             },
+            shape = RoundedCornerShape(corner = CornerSize(12.dp)),
             colors = ButtonDefaults
-                .buttonColors(backgroundColor = Color.Black),
+                .buttonColors(backgroundColor = Color(0xFF282828)),
             modifier = Modifier.fillMaxWidth()) {
             Text(text = "Notifications ")
             Icon(
@@ -100,8 +104,9 @@ fun MainScreen() {
                 val intentFiles = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
                 context.startActivity(intentFiles)
             },
+            shape = RoundedCornerShape(corner = CornerSize(12.dp)),
             colors = ButtonDefaults
-                .buttonColors(backgroundColor = Color.Black),
+                .buttonColors(backgroundColor = Color(0xFF282828)),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 15.dp)) {
