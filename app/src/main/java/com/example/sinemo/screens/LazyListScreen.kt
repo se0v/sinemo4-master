@@ -2,16 +2,20 @@ package com.example.sinemo.screens
 
 import android.content.Intent
 import android.media.MediaPlayer
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -41,6 +45,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -52,6 +57,76 @@ import com.example.sinemo.MyAccessibilityService
 import com.example.sinemo.R
 import com.example.sinemo.audioViewModel
 import java.io.File
+
+@Composable
+fun SoundGraph(recordList: List<Float>) {
+    Canvas(modifier = Modifier.fillMaxWidth().height(75.dp)) {
+        val width = size.width
+        val height = size.height / 2  // Половина высоты для отображения вверх и вниз
+
+        drawLine(
+            color = Color.White,
+            start = Offset(0f, height),
+            end = Offset(width, height),
+            strokeWidth = 1f
+        )
+
+        if (recordList.isNotEmpty()) {
+            val stepSize = width / recordList.size
+
+            recordList.forEachIndexed { index, amplitude ->
+                val x = index * stepSize
+
+                // Отображаем амплитуды вверх и вниз
+                val yUp = height - amplitude * height
+                val yDown = height + amplitude * height
+
+                // Рисуем линии для амплитуды
+                drawLine(
+                    color = Color.White,
+                    start = Offset(x, height),
+                    end = Offset(x, yUp),
+                    strokeWidth = 1f
+                )
+                drawLine(
+                    color = Color.White,
+                    start = Offset(x, height),
+                    end = Offset(x, yDown),
+                    strokeWidth = 1f
+                )
+            }
+        }
+    }
+}
+
+
+@Composable
+fun AudioPlayerWithGraph(
+    audioPath: String,
+    modifier: Modifier = Modifier
+) {
+    // Используем ваш код SoundGraph, предполагая, что у вас есть данные звука для отображения
+    val soundData = listOf(0.1f, 0.3f, 0.5f, 0.2f, 0.4f, 0.3f, 0.5f, 0.2f, 0.4f, 0.3f, 0.5f, 0.2f, 0.4f, 0.3f, 0.5f, 0.2f, 0.4f, 0.3f, 0.5f, 0.2f, 0.4f)
+
+    // Добавляем элементы управления для обрезки
+    var startCutIndex by remember { mutableStateOf(0) }
+    var endCutIndex by remember { mutableStateOf(soundData.size) }
+
+    Column(
+        modifier = modifier
+    ) {
+        SoundGraph(recordList = soundData.subList(startCutIndex, endCutIndex))
+
+        // Добавляем элементы управления для обрезки
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text("Start: $startCutIndex")
+            Text("End: $endCutIndex")
+        }
+    }
+}
 
 @Composable
 fun LazyListScreen(
@@ -105,6 +180,7 @@ fun LazyListScreen(
                             audioPath = record.audioPath,
                             modifier = Modifier.size(48.dp)
                         )
+                        //AudioPlayerWithGraph(audioPath = record.audioPath, modifier = Modifier.size(48.dp))
 
                         Column(
                             modifier = Modifier.weight(1f)
@@ -203,6 +279,14 @@ fun LazyListScreen(
                                     }
                                 }
                             )
+                        }
+                        Box(
+                            modifier = Modifier
+                                .padding(start = 16.dp, top = 60.dp, end = 16.dp, bottom = 4.dp)
+                                .background(color = Color(0xFF1F2022), shape = RoundedCornerShape(corner = CornerSize(12.dp)))
+                                .height(100.dp) // Задайте желаемую высоту
+                        ){
+                            AudioPlayerWithGraph(audioPath = record.audioPath, modifier = Modifier.fillMaxWidth())
                         }
                     }
                 }
