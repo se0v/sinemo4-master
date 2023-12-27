@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -53,9 +52,10 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import com.example.sinemo.BuildConfig
 import com.example.sinemo.DataRecord
-import com.example.sinemo.MyAccessibilityService
 import com.example.sinemo.R
 import com.example.sinemo.audioViewModel
+import com.example.sinemo.soundArr
+import com.example.sinemo.stopRecording
 import java.io.File
 
 @Composable
@@ -99,23 +99,19 @@ fun SoundGraph(recordList: List<Float>) {
     }
 }
 
-
 @Composable
 fun AudioPlayerWithGraph(
     audioPath: String,
     modifier: Modifier = Modifier
 ) {
-    // Используем ваш код SoundGraph, предполагая, что у вас есть данные звука для отображения
-    val soundData = listOf(0.1f, 0.3f, 0.5f, 0.2f, 0.4f, 0.3f, 0.5f, 0.2f, 0.4f, 0.3f, 0.5f, 0.2f, 0.4f, 0.3f, 0.5f, 0.2f, 0.4f, 0.3f, 0.5f, 0.2f, 0.4f)
-
     // Добавляем элементы управления для обрезки
-    var startCutIndex by remember { mutableStateOf(0) }
-    var endCutIndex by remember { mutableStateOf(soundData.size) }
+    val startCutIndex by remember { mutableStateOf(0) }
+    val endCutIndex by remember { mutableStateOf(soundArr.size) }
 
     Column(
         modifier = modifier
     ) {
-        SoundGraph(recordList = soundData.subList(startCutIndex, endCutIndex))
+        SoundGraph(recordList = soundArr.subList(startCutIndex, endCutIndex))
 
         // Добавляем элементы управления для обрезки
         Row(
@@ -180,7 +176,6 @@ fun LazyListScreen(
                             audioPath = record.audioPath,
                             modifier = Modifier.size(48.dp)
                         )
-                        //AudioPlayerWithGraph(audioPath = record.audioPath, modifier = Modifier.size(48.dp))
 
                         Column(
                             modifier = Modifier.weight(1f)
@@ -195,8 +190,7 @@ fun LazyListScreen(
                         }
 
                         IconButton(onClick = {
-                            val myAccessibilityService = MyAccessibilityService()
-                            myAccessibilityService.stopRecording(audioViewModel)
+                            stopRecording(audioViewModel)
                             try {
                                 val file = File(record.audioPath)
                                 if (file.exists()) {

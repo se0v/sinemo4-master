@@ -18,11 +18,9 @@ open class StartRecBroadcastReceiver : BroadcastReceiver() {
     private fun startInterceptedNotificationRec(notificationCode: Int) {
         when (notificationCode) {
             NotificationListener.InterceptedNotificationCode.TELEGRAM_CODE -> if (isRecording) {
-                val myAccessibilityService = MyAccessibilityService()
-                myAccessibilityService.stopRecording(audioViewModel)
+                stopRecording(audioViewModel)
             } else {
-                val myAccessibilityService = MyAccessibilityService()
-                myAccessibilityService.startRecording()
+                startRecording()
             }
             NotificationListener.InterceptedNotificationCode.OTHER_APPS_CODE -> startRec = false
         }
