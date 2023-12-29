@@ -21,11 +21,18 @@ val addArr = object : Runnable {
     override fun run() {
         if (mediaRecorder != null) {
             maxAmplitude = (20 * kotlin.math.log10(mediaRecorder!!.maxAmplitude / 1.0)).toInt()
-            soundArr.add(maxAmplitude.toFloat()/100)
-            handler.postDelayed( this,100L)
+
+            // Установка ограничений на значения
+            val normalizedAmplitude = maxAmplitude.toFloat() / 200
+            val clampedAmplitude = normalizedAmplitude.coerceIn(0F, 1F)
+
+            soundArr.add(clampedAmplitude)
+
+            handler.postDelayed(this, 100L)
         }
     }
 }
+
 
 @RequiresApi(Build.VERSION_CODES.Q)
 fun startRecording() {

@@ -28,6 +28,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Slider
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
@@ -59,7 +60,8 @@ import com.example.sinemo.stopRecording
 import java.io.File
 
 @Composable
-fun SoundGraph(recordList: List<Float>) {
+fun SoundGraph(recordList: List<Float>, startCutIndex: Int, endCutIndex: Int) {
+    val copiedList = recordList.toList()
     Canvas(modifier = Modifier.fillMaxWidth().height(75.dp)) {
         val width = size.width
         val height = size.height / 2  // Половина высоты для отображения вверх и вниз
@@ -71,10 +73,10 @@ fun SoundGraph(recordList: List<Float>) {
             strokeWidth = 1f
         )
 
-        if (recordList.isNotEmpty()) {
-            val stepSize = width / recordList.size
+        if (copiedList.isNotEmpty()) {
+            val stepSize = width / copiedList.size
 
-            recordList.forEachIndexed { index, amplitude ->
+            copiedList.forEachIndexed { index, amplitude ->
                 val x = index * stepSize
 
                 // Отображаем амплитуды вверх и вниз
@@ -83,13 +85,13 @@ fun SoundGraph(recordList: List<Float>) {
 
                 // Рисуем линии для амплитуды
                 drawLine(
-                    color = Color.White,
+                    color = if (index in startCutIndex until endCutIndex) Color.White else Color.DarkGray,
                     start = Offset(x, height),
                     end = Offset(x, yUp),
                     strokeWidth = 1f
                 )
                 drawLine(
-                    color = Color.White,
+                    color = if (index in startCutIndex until endCutIndex) Color.White else Color.DarkGray,
                     start = Offset(x, height),
                     end = Offset(x, yDown),
                     strokeWidth = 1f
@@ -104,25 +106,45 @@ fun AudioPlayerWithGraph(
     audioPath: String,
     modifier: Modifier = Modifier
 ) {
-    // Добавляем элементы управления для обрезки
-    val startCutIndex by remember { mutableStateOf(0) }
-    val endCutIndex by remember { mutableStateOf(soundArr.size) }
+    var startCutIndex by remember { mutableStateOf(0) }
+    var endCutIndex by remember { mutableStateOf(soundArr.size) }
 
     Column(
         modifier = modifier
     ) {
-        SoundGraph(recordList = soundArr.subList(startCutIndex, endCutIndex))
+        SoundGraph(recordList = soundArr.subList(startCutIndex, endCutIndex), startCutIndex, endCutIndex)
 
-        // Добавляем элементы управления для обрезки
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text("Start: $startCutIndex")
-            Text("End: $endCutIndex")
+            // Используйте Slider для управления начальным индексом
+            Slider(
+                value = startCutIndex.toFloat(),
+                onValueChange = { value ->
+                    val newIndex = value.toInt().coerceIn(0, endCutIndex - 1)
+                    startCutIndex = newIndex
+                },
+                valueRange = 0f..(endCutIndex - 1).toFloat()
+            )
+
+            // Используйте Slider для управления конечным индексом
+            Slider(
+                value = endCutIndex.toFloat(),
+                onValueChange = { value ->
+                    val newIndex = value.toInt().coerceIn(startCutIndex + 1, soundArr.size)
+                    endCutIndex = newIndex
+                },
+                valueRange = (startCutIndex + 1).toFloat()..soundArr.size.toFloat()
+            )
+
+            // Добавляем текст с количеством значений в массиве
+            Text("Count: ${endCutIndex - startCutIndex}")
         }
     }
 }
+
+
 
 @Composable
 fun LazyListScreen(
