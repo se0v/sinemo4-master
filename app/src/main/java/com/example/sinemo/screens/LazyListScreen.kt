@@ -43,6 +43,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -155,6 +156,14 @@ fun LazyListScreen(
 
     var showDialog by remember { mutableStateOf(false) }
     var recordToDelete by remember { mutableStateOf<DataRecord?>(null) }
+
+    LaunchedEffect(dataSet) {
+        if (dataSet.size > 2) {
+            while (dataSet.size > 2) {
+                dataSet.removeAt(0)  // Удаляем самый старый элемент
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
