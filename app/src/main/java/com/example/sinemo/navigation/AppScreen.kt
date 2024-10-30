@@ -16,9 +16,5 @@ sealed class AppScreen(
     object MainScreen: AppScreen("mainScreen", R.string.screen_main, Icons.Default.Home)
 
     companion object {
-        fun getAll() = listOf(
-            MainScreen,
-            LazyList
-        )
     }
 }

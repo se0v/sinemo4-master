@@ -41,8 +41,6 @@ fun startRecording() {
         numRec++
         output = Environment.getExternalStorageDirectory().absolutePath + "/recording$numRec.ogg"
         mediaRecorder = MediaRecorder().apply{
-            //setAudioSource(MediaRecorder.AudioSource.DEFAULT)
-            //setAudioSource(MediaRecorder.AudioSource.MIC)
             setAudioSource(MediaRecorder.AudioSource.VOICE_RECOGNITION)
             setOutputFormat(MediaRecorder.OutputFormat.OGG)
             setAudioEncoder(MediaRecorder.AudioEncoder.OPUS)

@@ -27,7 +27,7 @@ fun AppNavigation(
         composable(
             route = AppScreen.MainScreen.route
         ){
-            MainScreen()
+            MainScreen(navController)
         }
     }
 
